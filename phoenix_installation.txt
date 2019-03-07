@@ -1,0 +1,100 @@
+1. copy 'apache-phoenix-4.10.0-HBase-1.2-bin.tar.gz' file into '/home/orienit/work' folder
+
+2. extract 'apache-phoenix-4.10.0-HBase-1.2-bin.tar.gz' file into '/home/orienit/work' folder
+
+3. update '~/.bashrc' file with below changes
+
+command: gedit ~/.bashrc
+
+export PHOENIX_HOME=/home/orienit/work/apache-phoenix-4.10.0-HBase-1.2-bin
+export PATH=$PHOENIX_HOME/bin:$PATH
+
+4. re-open the terminal
+
+5. verify with below command
+	
+echo $PHOENIX_HOME
+
+6. copy the required jar's to `$HBASE_HOME/lib` folder
+
+cp $PHOENIX_HOME/phoenix-4.10.0-HBase-1.2-server.jar $HBASE_HOME/lib
+cp $PHOENIX_HOME/phoenix-4.10.0-HBase-1.2-client.jar $HBASE_HOME/lib
+
+or
+
+ln -s $PHOENIX_HOME/phoenix-4.10.0-HBase-1.2-server.jar $HBASE_HOME/lib/phoenix-4.10.0-HBase-1.2-server.jar
+ln -s $PHOENIX_HOME/phoenix-4.10.0-HBase-1.2-client.jar $HBASE_HOME/lib/phoenix-4.10.0-HBase-1.2-client.jar
+
+
+Note: restart the hbase after copying the jars
+
+07. practice phoenix examples
+
+psql.py localhost $PHOENIX_HOME/examples/WEB_STAT.sql $PHOENIX_HOME/examples/WEB_STAT.csv $PHOENIX_HOME/examples/WEB_STAT_QUERIES.sql
+
+
+Now you can connect to HBase using sqlline:
+===============================================
+sqlline.py localhost
+!tables
+select count(*) from web_stat;
+select host, sum(active_visitor) from web_stat group by host;
+
+CREATE VIEW "test" ( pk VARCHAR PRIMARY KEY, "cf"."a" VARCHAR, "cf"."b" VARCHAR, "cf"."c" VARCHAR );
+select * from "test";
+
+UPSERT INTO "test" VALUES ('row4','mya','myb','myc');
+
+UPSERT INTO "test" (pk, "cf"."a","cf"."b","cf"."c") VALUES ('row5','mya','myb','myc');
+
+
+CREATE VIEW "cars" ( pk VARCHAR PRIMARY KEY, "vi"."make" VARCHAR, "vi"."model" VARCHAR,"vi"."year" VARCHAR );
+select * from "cars";
+
+
+CREATE TABLE IF NOT EXISTS STUDENT (NAME VARCHAR NOT NULL PRIMARY KEY, ID INTEGER,  YEAR INTEGER);
+UPSERT INTO STUDENT VALUES ('ARUN',1,2012);
+UPSERT INTO STUDENT VALUES ('RAJ',2,2014);
+UPSERT INTO STUDENT VALUES ('VENKAT',3,2013);
+UPSERT INTO STUDENT VALUES ('ANIL',4,2012);
+SELECT * FROM STUDENT;
+
+
+
+
+
+CREATE TABLE IF NOT EXISTS STUDENT1 (NAME VARCHAR NOT NULL PRIMARY KEY, KALYAN.ID INTEGER,  KALYAN.YEAR INTEGER);
+
+
+CREATE TABLE IF NOT EXISTS STUDENT2 (NAME VARCHAR NOT NULL PRIMARY KEY, CF1.ID INTEGER,  CF2.YEAR INTEGER);
+
+
+CREATE TABLE IF NOT EXISTS KALYAN.STUDENT (NAME VARCHAR NOT NULL PRIMARY KEY, ID INTEGER,  YEAR INTEGER);
+
+
+
+Using SQuirreL with Phoenix
+====================================
+java -jar squirrel-sql-3.6-standard.jar
+cp $PHOENIX_HOME/phoenix-4.10.0-HBase-1.2-client.jar ~/squirrel-sql-3.6/lib
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
